@@ -1,0 +1,187 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000                 THUMB
+    2 00000000                 AREA             vector_table, DATA, READONLY ;t
+                                                            ablia wektorow prze
+                                                            rwan  - niepelna!
+    3 00000000         
+    4 00000000 2000FFFF        DCD              0x2000FFFF  ;wartosc wskaznika 
+                                                            stosu pod adresem 0
+                                                            x00000000
+    5 00000004 00000000        DCD              reset_handler ;komorka 0x000000
+                                                            04 - adres procedur
+                                                            y obslugi przerwani
+                                                            a reset
+    6 00000008         
+    7 00000008                 ALIGN
+    8 00000008                 AREA             program_data, DATA, READWRITE ;
+                                                            dane inicjowane war
+                                                            toscia
+    9 00000000         
+   10 00000000         
+   11 00000000 01 04 F3 
+              41 02 08 
+              04 00    byte_tab
+                               DCB              0x01, 0x04, 0xF3, 0x41, 0x02, 0
+x08, 0x04, 0x00
+   12 00000008 00000000 
+                       word_result
+                               DCD              0x00
+   13 0000000C         
+   14 0000000C                 ALIGN
+   15 0000000C                 AREA             program_code, CODE, READONLY 
+                                                            ;kod programu
+   16 00000000         
+   17 00000000                 ENTRY                        ;punkt wejsciowy - 
+                                                            adres pierwszej ins
+                                                            trukcji w programie
+                                                            
+   18 00000000         
+   19 00000000         reset_handler
+   20 00000000 4805            LDR              R0,=byte_tab ; R0 adres byte_ta
+                                                            b (1. element)
+   21 00000002 F04F 0200       MOV              R2,#0       ; Wpisanie stalej (
+                                                            # = stala natychmia
+                                                            stowa)
+   22 00000006         while_loop
+   23 00000006 F810 1B01       LDRB             R1,[R0],#1  ; Zaladuj spod adre
+                                                            su w R0 do R1 (LDRB
+                                                             = 1 bajt), #1 = pr
+                                                            zesun wskaznik w R0
+                                                             o 1 bajt
+   24 0000000A         
+   25 0000000A B119            CBZ              R1,main_loop ; Compare and bran
+                                                            ch if zero
+   26 0000000C         ; CMP  R1,#0    ; Odejmij R1 - 0, ustawia flagi; jesli R
+                       1 jest = 0 to ustawi sie flaga "zero".
+   27 0000000C         ; BEQ  main_loop   ; Jesli flaga "zero" jest ustawiona t
+                       o skocz do main_loop.
+   28 0000000C         
+   29 0000000C 428A            CMP              R2,R1
+   30 0000000E BF38            IT               LO          ; ITTEEE LO - to oz
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+                                                            nacza ze jesli waru
+                                                            nek spelniony zrob 
+                                                            dwie instrukcje THE
+                                                            N i 3 instrukcje EL
+                                                            SE, u nas jedna ins
+                                                            trukcja THEN czyli 
+                                                            MOVLO R2,R1
+   31 00000010 460A            MOVLO            R2,R1       ; Przenies jesli R1
+                                                             wieksze od R2
+   32 00000012         ; CMP  R2,R1    ; Odemij R2 - R1.
+   33 00000012         ; BHI  while_loop   ; 
+   34 00000012         ; MOV  R2,R1    ; Przpisz R1 do R2
+   35 00000012         
+   36 00000012         ;if_higher
+   37 00000012 E7F8            B                while_loop
+   38 00000014         
+   39 00000014         main_loop
+   40 00000014 E7FE            B                main_loop   ; Skok bezwarunkowy
+                                                             do main_loop
+   41 00000016         
+   42 00000016                 END
+              00 00 00000000 
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M4.fp --apcs=int
+erwork --depend=.\objects\source1.d -o.\objects\source1.o -I\\KRYWAN\Redirected
+UserFolders\student_2016\Documents\mVision_PolichtZegartowski\RTE -IC:\Keil_v5\
+ARM\PACK\Keil\STM32F4xx_DFP\2.10.0\Drivers\CMSIS\Device\ST\STM32F4xx\Include -I
+C:\Keil_v5\ARM\CMSIS\Include --predefine="__EVAL SETA 1" --predefine="__UVISION
+_VERSION SETA 516" --predefine="STM32F429xx SETA 1" --list=.\listings\source1.l
+st Source1.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+vector_table 00000000
+
+Symbol: vector_table
+   Definitions
+      At line 2 in file Source1.s
+   Uses
+      None
+Comment: vector_table unused
+1 symbol
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+byte_tab 00000000
+
+Symbol: byte_tab
+   Definitions
+      At line 11 in file Source1.s
+   Uses
+      At line 20 in file Source1.s
+Comment: byte_tab used once
+program_data 00000000
+
+Symbol: program_data
+   Definitions
+      At line 8 in file Source1.s
+   Uses
+      None
+Comment: program_data unused
+word_result 00000008
+
+Symbol: word_result
+   Definitions
+      At line 12 in file Source1.s
+   Uses
+      None
+Comment: word_result unused
+3 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+main_loop 00000014
+
+Symbol: main_loop
+   Definitions
+      At line 39 in file Source1.s
+   Uses
+      At line 25 in file Source1.s
+      At line 40 in file Source1.s
+
+program_code 00000000
+
+Symbol: program_code
+   Definitions
+      At line 15 in file Source1.s
+   Uses
+      None
+Comment: program_code unused
+reset_handler 00000000
+
+Symbol: reset_handler
+   Definitions
+      At line 19 in file Source1.s
+   Uses
+      At line 5 in file Source1.s
+Comment: reset_handler used once
+while_loop 00000006
+
+Symbol: while_loop
+   Definitions
+      At line 22 in file Source1.s
+   Uses
+      At line 37 in file Source1.s
+Comment: while_loop used once
+4 symbols
+344 symbols in table
